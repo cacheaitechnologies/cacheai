@@ -1,0 +1,76 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cacheai"
+version = "0.1.0"
+description = "Official Python API for CacheAI - Semantic Caching for Large Language Models"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "CacheAI Technologies, Inc.", email = "info@cacheaitechnologies.com"}
+]
+keywords = ["cacheai", "llm", "caching", "openai", "chatgpt", "semantic-cache"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "requests>=2.28.0",
+    "pydantic>=2.0.0",
+    "typing-extensions>=4.5.0",
+    "urllib3>=1.26.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "mypy>=1.0.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "types-requests>=2.28.0",
+]
+
+[project.urls]
+Homepage = "https://www.cacheaitechnologies.com"
+Documentation = "https://docs.cacheai.tech"
+Repository = "https://github.com/cacheaitechnologies/cacheai"
+Changelog = "https://github.com/cacheaitechnologies/cacheai/blob/main/CHANGELOG.md"
+"Bug Tracker" = "https://github.com/cacheaitechnologies/cacheai/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["cacheai*"]
+exclude = ["tests*"]
+
+[tool.black]
+line-length = 100
+target-version = ['py310', 'py311', 'py312', 'py313']
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
