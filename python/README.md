@@ -1,6 +1,6 @@
-# CacheAI Python API
+# Cache AI Python API
 
-Official Python API for CacheAI - Semantic Caching for Large Language Models
+Official Python API for Cache AI - Semantic Caching for Large Language Models
 
 [![PyPI version](https://badge.fury.io/py/cacheai.svg)](https://badge.fury.io/py/cacheai)
 [![Python Support](https://img.shields.io/pypi/pyversions/cacheai.svg)](https://pypi.org/project/cacheai/)
@@ -89,7 +89,7 @@ for chunk in stream:
 
 ### Backend LLM Configuration
 
-CacheAI acts as a caching layer in front of your preferred LLM provider. Configure the backend:
+Cache AI acts as a caching layer in front of your preferred LLM provider. Configure the backend:
 
 ```python
 from cacheai import Client
@@ -174,7 +174,7 @@ except CacheAIError as e:
 
 ```python
 Client(
-    api_key: Optional[str] = None,           # CacheAI API key
+    api_key: Optional[str] = None,           # Cache AI API key
     base_url: Optional[str] = None,          # API base URL
     timeout: float = 60.0,                   # Request timeout
     max_retries: int = 2,                    # Max retry attempts
@@ -205,7 +205,7 @@ client.chat.completions.create(
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `CACHEAI_API_KEY` | CacheAI API key | (required) |
+| `CACHEAI_API_KEY` | Cache AI API key | (required) |
 | `CACHEAI_BASE_URL` | API base URL | `https://api.cacheai.tech/v1` |
 | `CACHEAI_ENABLE_CACHE` | Enable semantic caching | `true` |
 | `CACHEAI_BACKEND_PROVIDER` | Backend LLM provider | (optional) |
@@ -214,7 +214,7 @@ client.chat.completions.create(
 
 ## Migration from OpenAI
 
-CacheAI is designed to be a drop-in replacement for OpenAI:
+Cache AI is designed to be a drop-in replacement for OpenAI:
 
 ```python
 # Before (OpenAI)
@@ -222,7 +222,7 @@ from openai import OpenAI
 client = OpenAI(api_key="sk-...")
 response = client.chat.completions.create(...)
 
-# After (CacheAI)
+# After (Cache AI)
 from cacheai import Client
 client = Client(api_key="ca-...", backend_provider="openai", backend_api_key="sk-...")
 response = client.chat.completions.create(...)
@@ -266,8 +266,7 @@ ruff cacheai
 ## Support
 
 - **Documentation**: [https://docs.cacheai.tech](https://docs.cacheai.tech)
-- **Issues**: [GitHub Issues](https://github.com/cacheaitechnologies/cacheai-python/issues)
-- **Email**: info@cacheaitechnologies.com
+- **Issues**: [GitHub Issues](https://github.com/cacheaitechnologies/cacheai/issues)
 
 ## License
 
@@ -277,5 +276,5 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 - [Homepage](https://www.cacheaitechnologies.com)
 - [Documentation](https://docs.cacheai.tech)
-- [GitHub Repository](https://github.com/cacheaitechnologies/cacheai-python)
+- [GitHub Repository](https://github.com/cacheaitechnologies/cacheai)
 - [PyPI Package](https://pypi.org/project/cacheai/)

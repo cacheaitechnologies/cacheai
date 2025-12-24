@@ -1,4 +1,4 @@
-"""Basic tests for CacheAI Python API."""
+"""Basic tests for Cache AI Python API."""
 
 import pytest
 from cacheai import Client
