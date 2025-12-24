@@ -1,4 +1,4 @@
-"""CacheAI API resources."""
+"""Cache AI API resources."""
 
 from cacheai.resources.chat import Chat
 

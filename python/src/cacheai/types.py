@@ -1,4 +1,4 @@
-"""CacheAI Python API type definitions."""
+"""Cache AI Python API type definitions."""
 
 from typing import List, Optional, Union, Literal
 from pydantic import BaseModel, Field

@@ -1,4 +1,4 @@
-"""CacheAI Python API exceptions."""
+"""Cache AI Python API exceptions."""
 
 from typing import Optional
 

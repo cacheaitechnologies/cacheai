@@ -1,12 +1,12 @@
-# CacheAI
+# Cache AI
 
-Official Python API and tools for CacheAI - Semantic Caching for Large Language Models
+Official Python API and tools for Cache AI - Semantic Caching for Large Language Models
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Overview
 
-CacheAI provides semantic caching for large language models, significantly reducing API costs and latency by intelligently caching similar queries. This repository contains official API and integration tools for various programming languages and platforms.
+Cache AI provides semantic caching for large language models, significantly reducing API costs and latency by intelligently caching similar queries. This repository contains official API and integration tools for various programming languages and platforms.
 
 ## Features
 

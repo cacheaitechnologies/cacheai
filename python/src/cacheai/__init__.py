@@ -1,4 +1,4 @@
-"""CacheAI Python API."""
+"""Cache AI Python API."""
 
 from cacheai.version import __version__
 from cacheai.client import Client

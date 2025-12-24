@@ -1,4 +1,4 @@
-"""Basic chat completion example using CacheAI Python API."""
+"""Basic chat completion example using Cache AI Python API."""
 
 import os
 from cacheai import Client, CacheAIError
@@ -20,7 +20,7 @@ def main():
         )
         
         print("=" * 60)
-        print("CacheAI Python API - Chat Completion Example")
+        print("Cache AI Python API - Chat Completion Example")
         print("=" * 60)
         print()
         

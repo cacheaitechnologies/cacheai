@@ -1,4 +1,4 @@
-"""CacheAI Python API client."""
+"""Cache AI Python API client."""
 
 import os
 from typing import Optional, Dict, Any, Iterator
@@ -22,7 +22,7 @@ from cacheai.exceptions import (
 
 class Client:
     """
-    CacheAI API client.
+    Cache AI API client.
 
     Example:
         ```python
@@ -53,10 +53,10 @@ class Client:
         backend_base_url: Optional[str] = None,
     ) -> None:
         """
-        Initialize CacheAI client.
+        Initialize Cache AI client.
 
         Args:
-            api_key: CacheAI API key. If not provided, reads from CACHEAI_API_KEY env var
+            api_key: Cache AI API key. If not provided, reads from CACHEAI_API_KEY env var
             base_url: Base URL for API. If not provided, reads from CACHEAI_BASE_URL env var
             timeout: Request timeout in seconds
             max_retries: Maximum number of retries for failed requests
