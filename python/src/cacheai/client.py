@@ -48,9 +48,9 @@ class Client:
         timeout: float = 60.0,
         max_retries: int = 2,
         enable_cache: bool = True,
-        backend_provider: Optional[str] = None,
-        backend_api_key: Optional[str] = None,
-        backend_base_url: Optional[str] = None,
+        baseline_model_provider: Optional[str] = None,
+        baseline_model_api_key: Optional[str] = None,
+        baseline_model_base_url: Optional[str] = None,
     ) -> None:
         """
         Initialize Cache AI client.
@@ -61,9 +61,9 @@ class Client:
             timeout: Request timeout in seconds
             max_retries: Maximum number of retries for failed requests
             enable_cache: Enable CacheAI semantic caching (default: True)
-            backend_provider: Backend LLM provider (openai, anthropic, google, etc.)
-            backend_api_key: Backend LLM API key
-            backend_base_url: Custom backend endpoint URL
+            baseline_model_provider: Baseline LLM provider (openai, anthropic, google, etc.)
+            baseline_model_api_key: Baseline LLM API key
+            baseline_model_base_url: Custom baseline LLM endpoint URL
         """
         self.api_key = api_key or os.getenv("CACHEAI_API_KEY")
         if not self.api_key:
@@ -83,10 +83,10 @@ class Client:
         self.max_retries = max_retries
         self.enable_cache = enable_cache
 
-        # Backend LLM configuration
-        self.backend_provider = backend_provider or os.getenv("CACHEAI_BACKEND_PROVIDER")
-        self.backend_api_key = backend_api_key or os.getenv("CACHEAI_BACKEND_API_KEY")
-        self.backend_base_url = backend_base_url or os.getenv("CACHEAI_BACKEND_BASE_URL")
+        # Baseline model configuration
+        self.baseline_model_provider = baseline_model_provider or os.getenv("CACHEAI_BASELINE_MODEL_PROVIDER")
+        self.baseline_model_api_key = baseline_model_api_key or os.getenv("CACHEAI_BASELINE_MODEL_API_KEY")
+        self.baseline_model_base_url = baseline_model_base_url or os.getenv("CACHEAI_BASELINE_MODEL_BASE_URL")
 
         # Setup session with retry strategy
         self._session = requests.Session()
@@ -115,13 +115,13 @@ class Client:
         if not self.enable_cache:
             headers["X-CacheAI-Enable-Cache"] = "false"
 
-        # Add backend configuration headers
-        if self.backend_provider:
-            headers["X-CacheAI-Backend-Provider"] = self.backend_provider
-        if self.backend_api_key:
-            headers["X-CacheAI-Backend-API-Key"] = self.backend_api_key
-        if self.backend_base_url:
-            headers["X-CacheAI-Backend-Base-URL"] = self.backend_base_url
+        # Add baseline configuration headers
+        if self.baseline_model_provider:
+            headers["X-CacheAI-Baseline-Model-Provider"] = self.baseline_model_provider
+        if self.baseline_model_api_key:
+            headers["X-CacheAI-Baseline-Model-API-Key"] = self.baseline_model_api_key
+        if self.baseline_model_base_url:
+            headers["X-CacheAI-Baseline-Model-Base-URL"] = self.baseline_model_base_url
 
         if extra_headers:
             headers.update(extra_headers)

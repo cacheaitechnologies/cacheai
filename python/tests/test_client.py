@@ -31,15 +31,15 @@ def test_client_cache_control():
     assert client.enable_cache is False
 
 
-def test_client_backend_configuration():
-    """Test backend LLM configuration."""
+def test_client_baseline_configuration():
+    """Test baseline LLM configuration."""
     client = Client(
         api_key="test-key",
-        backend_provider="openai",
-        backend_api_key="sk-test"
+        baseline_model_provider="openai",
+        baseline_model_api_key="sk-test"
     )
-    assert client.backend_provider == "openai"
-    assert client.backend_api_key == "sk-test"
+    assert client.baseline_model_provider == "openai"
+    assert client.baseline_model_api_key == "sk-test"
 
 
 def test_client_has_chat_resource():

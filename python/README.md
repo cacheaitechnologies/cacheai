@@ -10,7 +10,7 @@ Official Python API for Cache AI - Semantic Caching for Large Language Models
 
 - **OpenAI Compatible**: Drop-in replacement for OpenAI Python SDK
 - **Semantic Caching**: Automatic caching of similar queries using advanced semantic similarity
-- **Multiple LLM Backends**: Support for OpenAI, Anthropic, Google AI, and more
+- **Multiple Baseline LLMs**: Support for OpenAI, Anthropic, Google AI, and more
 - **Streaming Support**: Full support for streaming responses
 - **Type-Safe**: Complete type hints for better IDE support
 - **Easy Integration**: Minimal code changes required
@@ -53,8 +53,8 @@ from cacheai import Client
 
 # Set environment variables
 os.environ["CACHEAI_API_KEY"] = "your-cacheai-api-key"
-os.environ["CACHEAI_BACKEND_PROVIDER"] = "openai"
-os.environ["CACHEAI_BACKEND_API_KEY"] = "your-openai-api-key"
+os.environ["CACHEAI_BASELINE_MODEL_PROVIDER"] = "openai"
+os.environ["CACHEAI_BASELINE_MODEL_API_KEY"] = "your-baseline-model-api-key"
 
 # Initialize client (reads from environment)
 client = Client()
@@ -87,22 +87,22 @@ for chunk in stream:
 
 ## Configuration
 
-### Backend LLM Configuration
+### Baseline LLM Configuration
 
-Cache AI acts as a caching layer in front of your preferred LLM provider. Configure the backend:
+Cache AI acts as a caching layer in front of your preferred LLM provider. Configure the baseline model:
 
 ```python
 from cacheai import Client
 
 client = Client(
     api_key="your-cacheai-api-key",
-    backend_provider="openai",        # "openai", "anthropic", "google", etc.
-    backend_api_key="your-openai-key",  # Backend LLM API key
+    baseline_model_provider="openai",        # "openai", "anthropic", "google", etc.
+    baseline_model_api_key="your-openai-key",  # Baseline LLM API key
 )
 
 # Or use environment variables:
-# CACHEAI_BACKEND_PROVIDER=openai
-# CACHEAI_BACKEND_API_KEY=sk-...
+# CACHEAI_BASELINE_MODEL_PROVIDER=openai
+# CACHEAI_BASELINE_MODEL_API_KEY=sk-...
 ```
 
 ### Cache Control
@@ -179,9 +179,9 @@ Client(
     timeout: float = 60.0,                   # Request timeout
     max_retries: int = 2,                    # Max retry attempts
     enable_cache: bool = True,               # Enable semantic caching
-    backend_provider: Optional[str] = None,  # Backend LLM provider
-    backend_api_key: Optional[str] = None,   # Backend API key
-    backend_base_url: Optional[str] = None   # Custom backend URL
+    baseline_model_provider: Optional[str] = None,  # Baseline LLM provider
+    baseline_model_api_key: Optional[str] = None,   # Baseline LLM API key
+    baseline_model_base_url: Optional[str] = None   # Custom baseline model URL
 )
 ```
 
@@ -208,9 +208,9 @@ client.chat.completions.create(
 | `CACHEAI_API_KEY` | Cache AI API key | (required) |
 | `CACHEAI_BASE_URL` | API base URL | `https://api.cacheai.tech/v1` |
 | `CACHEAI_ENABLE_CACHE` | Enable semantic caching | `true` |
-| `CACHEAI_BACKEND_PROVIDER` | Backend LLM provider | (optional) |
-| `CACHEAI_BACKEND_API_KEY` | Backend LLM API key | (optional) |
-| `CACHEAI_BACKEND_BASE_URL` | Custom backend URL | (optional) |
+| `CACHEAI_BASELINE_MODEL_PROVIDER` | Baseline model provider | (optional) |
+| `CACHEAI_BASELINE_MODEL_API_KEY` | Baseline model API key | (optional) |
+| `CACHEAI_BASELINE_MODEL_BASE_URL` | Custom Baseline model URL | (optional) |
 
 ## Migration from OpenAI
 
@@ -224,7 +224,7 @@ response = client.chat.completions.create(...)
 
 # After (Cache AI)
 from cacheai import Client
-client = Client(api_key="ca-...", backend_provider="openai", backend_api_key="sk-...")
+client = Client(api_key="ca-...", baseline_model_provider="openai", baseline_model_api_key="sk-...")
 response = client.chat.completions.create(...)
 ```
 
