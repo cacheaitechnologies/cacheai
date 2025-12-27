@@ -1,8 +1,11 @@
 """Baseline model utility for calling baseline LLMs on no cache hit."""
 
 from typing import Dict, Any, List, Optional
+import logging
 import requests
 from cacheai.exceptions import APIError, ValidationError
+
+logger = logging.getLogger(__name__)
 
 
 def call_baseline_model(
@@ -40,6 +43,8 @@ def call_baseline_model(
         else:
             raise ValidationError(f"Unsupported baseline model provider: {baseline_model_provider}")
         
+    logger.info(f"Calling Baseline model: provider={baseline_model_provider}, model={model}")
+    
     # Call Baseline model API (OpenAI-compatible)
     url = f"{baseline_model_base_url.rstrip('/')}/chat/completions"
     headers = {
@@ -63,9 +68,13 @@ def call_baseline_model(
     # Newer models require max_completion_tokens, older models use max_tokens
     if "max_completion_tokens" in kwargs and kwargs["max_completion_tokens"] is not None:
         payload["max_completion_tokens"] = kwargs["max_completion_tokens"]
+        logger.debug(f"Using max_completion_tokens={kwargs['max_completion_tokens']}")
     elif "max_tokens" in kwargs and kwargs["max_tokens"] is not None:
         # For newer models, convert max_tokens to max_completion_tokens
         payload["max_completion_tokens"] = kwargs["max_tokens"]
+        logger.debug(f"Converted max_tokens to max_completion_tokens={kwargs['max_tokens']}")
+    
+    logger.debug(f"Baseline model request: url={url}, payload={payload}")
     
     try:
         response = requests.post(
@@ -76,6 +85,7 @@ def call_baseline_model(
         )
         response.raise_for_status()
         result = response.json()
+        logger.info(f"Baseline model call succeeded: model={result.get('model')}")
         return result
         
     except requests.exceptions.RequestException as e:
@@ -84,7 +94,10 @@ def call_baseline_model(
             try:
                 error_json = e.response.json()
                 error_detail = f" - Details: {error_json}"
+                logger.error(f"Baseline model API error response: {error_json}")
             except:
                 error_detail = f" - Response text: {e.response.text}"
+                logger.error(f"Baseline model API error text: {e.response.text}")
         
+        logger.error(f"Baseline model API call failed: {e}{error_detail}")
         raise APIError(f"Baseline model API call failed: {e}{error_detail}")

@@ -11,6 +11,13 @@ from cacheai import Client
 from datetime import datetime
 import random
 import os
+import logging
+
+# Configure logging
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 
 # Get API keys from environment variables
 cacheai_api_key = os.getenv("CACHEAI_API_KEY")
