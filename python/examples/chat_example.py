@@ -9,14 +9,14 @@ def main():
     # Initialize client
     # You can set API keys via environment variables:
     # export CACHEAI_API_KEY="your-cacheai-api-key"
-    # export CACHEAI_BACKEND_PROVIDER="openai"
-    # export CACHEAI_BACKEND_API_KEY="your-openai-api-key"
+    # export CACHEAI_BASELINE_MODEL_PROVIDER="openai"
+    # export CACHEAI_BASELINE_MODEL_API_KEY="your-baseline-model-api-key"
     
     try:
         client = Client(
             api_key=os.getenv("CACHEAI_API_KEY", "your-cacheai-api-key"),
-            backend_provider=os.getenv("CACHEAI_BACKEND_PROVIDER", "openai"),
-            backend_api_key=os.getenv("CACHEAI_BACKEND_API_KEY", "your-openai-api-key"),
+            baseline_model_provider=os.getenv("CACHEAI_BASELINE_MODEL_PROVIDER", "openai"),
+            baseline_model_api_key=os.getenv("CACHEAI_BASELINE_MODEL_API_KEY", "your-baseline-model-api-key"),
         )
         
         print("=" * 60)
@@ -47,8 +47,8 @@ def main():
         print(f"Error: {e}")
         print("\nPlease set the following environment variables:")
         print("  CACHEAI_API_KEY")
-        print("  CACHEAI_BACKEND_PROVIDER")
-        print("  CACHEAI_BACKEND_API_KEY")
+        print("  CACHEAI_BASELINE_MODEL_PROVIDER")
+        print("  CACHEAI_BASELINE_MODEL_API_KEY")
 
 
 if __name__ == "__main__":

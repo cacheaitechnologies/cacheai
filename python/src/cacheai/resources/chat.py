@@ -2,6 +2,7 @@
 
 from typing import List, Optional, Union, Iterator, Dict, Any
 import json
+import requests
 
 from cacheai.types import (
     ChatCompletion,
@@ -83,7 +84,62 @@ class Completions:
             return self._stream(payload)
         else:
             response_data = self._client._post("/chat/completions", json=payload)
+            
+            # Check if Baseline model is required (no cache hit)
+            if response_data.get("requires_baseline_model"):
+                # Call Baseline model
+                response_data = self._call_baseline_model(model, messages, payload)
             return ChatCompletion(**response_data)
+
+    def _call_baseline_model(
+        self,
+        model: str,
+        messages: List[Dict[str, str]],
+        payload: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """
+        Call Baseline model API when no cache hit.
+        
+        Args:
+            model: Model ID
+            messages: List of messages
+            payload: Original request payload
+            
+        Returns:
+            Response data in ChatCompletion format
+        """
+        from cacheai.utils.baseline_model import call_baseline_model
+        
+        # Get baseline configuration from client
+        baseline_model_provider = self._client.baseline_model_provider
+        baseline_model_api_key = self._client.baseline_model_api_key
+        baseline_model_base_url = self._client.baseline_model_base_url
+        
+        # Validate baseline configuration
+        if not baseline_model_provider:
+            raise ValidationError(
+                "Baseline model provider is required for Baseline model calls. "
+                "Set baseline_model_provider in Client or CACHEAI_BASELINE_MODEL_PROVIDER env var."
+            )
+        
+        if not baseline_model_api_key:
+            raise ValidationError(
+                "Baseline LLM API key is required for Baseline model calls. "
+                "Set baseline_model_api_key in Client or CACHEAI_BASELINE_MODEL_API_KEY env var."
+            )
+        
+        # Call Baseline model
+        return call_baseline_model(
+            model=model,
+            messages=messages,
+            baseline_model_provider=baseline_model_provider,
+            baseline_model_api_key=baseline_model_api_key,
+            baseline_model_base_url=baseline_model_base_url,
+            timeout=self._client.timeout,
+            **{k: v for k, v in payload.items() 
+               if k in ["temperature", "max_tokens", "top_p", 
+                       "frequency_penalty", "presence_penalty", "stop"]}
+        )
 
     def _stream(self, payload: Dict[str, Any]) -> Iterator[ChatCompletionChunk]:
         """Stream chat completion chunks."""
