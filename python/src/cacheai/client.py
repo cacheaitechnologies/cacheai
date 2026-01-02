@@ -1,6 +1,7 @@
 """Cache AI Python API client."""
 
 import os
+import logging
 from typing import Optional, Dict, Any, Iterator
 import requests
 from requests.adapters import HTTPAdapter
@@ -18,6 +19,8 @@ from cacheai.exceptions import (
     ConnectionError,
     ValidationError,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class Client:
@@ -88,6 +91,10 @@ class Client:
         self.baseline_model_api_key = baseline_model_api_key or os.getenv("CACHEAI_BASELINE_MODEL_API_KEY")
         self.baseline_model_base_url = baseline_model_base_url or os.getenv("CACHEAI_BASELINE_MODEL_BASE_URL")
 
+        logger.info(f"Initializing Cache AI client: base_url={self.base_url}, enable_cache={self.enable_cache}")
+        if self.baseline_model_provider:
+            logger.debug(f"Baseline model configured: provider={self.baseline_model_provider}, base_url={self.baseline_model_base_url or 'default'}")
+
         # Setup session with retry strategy
         self._session = requests.Session()
         retry_strategy = Retry(
@@ -135,8 +142,10 @@ class Client:
         try:
             error_data = response.json()
             error_message = error_data.get("error", {}).get("message", response.text)
+            logger.error(f"API error response: status={status_code}, error={error_data}")
         except Exception:
             error_message = response.text
+            logger.error(f"API error response: status={status_code}, text={response.text}")
 
         if status_code == 401:
             raise AuthenticationError(
@@ -180,6 +189,8 @@ class Client:
         url = f"{self.base_url}{path}"
         headers = self._get_headers(kwargs.pop("headers", None))
 
+        logger.debug(f"Making POST request: url={url}")
+
         try:
             response = self._session.post(
                 url,
@@ -191,13 +202,17 @@ class Client:
             if not response.ok:
                 self._handle_error_response(response)
 
+            logger.debug(f"POST request successful: status={response.status_code}")
             return response.json()
 
         except requests.exceptions.Timeout as e:
+            logger.error(f"Request timeout: url={url}, error={e}")
             raise TimeoutError(f"Request timed out: {e}")
         except requests.exceptions.ConnectionError as e:
+            logger.error(f"Connection error: url={url}, error={e}")
             raise ConnectionError(f"Connection failed: {e}")
         except requests.exceptions.RequestException as e:
+            logger.error(f"Request failed: url={url}, error={e}")
             raise CacheAIError(f"Request failed: {e}")
 
     def _stream_post(self, path: str, **kwargs: Any) -> Iterator[str]:
