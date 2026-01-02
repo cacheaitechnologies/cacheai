@@ -2,6 +2,7 @@
 
 from typing import List, Optional, Union, Iterator, Dict, Any
 import json
+import logging
 import requests
 
 from cacheai.types import (
@@ -15,6 +16,8 @@ from cacheai.exceptions import (
     APIError,
     ValidationError,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class Completions:
@@ -83,12 +86,19 @@ class Completions:
         if stream:
             return self._stream(payload)
         else:
+            logger.info(f"Creating chat completion: model={model}")
+            logger.debug(f"Request payload: {payload}")
             response_data = self._client._post("/chat/completions", json=payload)
+            logger.debug(f"Response data: {response_data}")
             
             # Check if Baseline model is required (no cache hit)
             if response_data.get("requires_baseline_model"):
+                logger.info("No cache hit, calling Baseline model")
                 # Call Baseline model
                 response_data = self._call_baseline_model(model, messages, payload)
+            else:
+                logger.info(f"Cache hit or direct response (requires_baseline_model={response_data.get('requires_baseline_model')})")
+            
             return ChatCompletion(**response_data)
 
     def _call_baseline_model(
