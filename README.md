@@ -46,20 +46,11 @@ See [Python API documentation](./python/README.md) for more details.
 ## Documentation
 
 - [Python API](./python/README.md)
-- [API Documentation](https://docs.cacheai.tech)
 - [Website](https://www.cacheaitechnologies.com)
 
 ## Getting an API Key
 
-1. Visit [CacheAI Technologies](https://www.cacheaitechnologies.com)
-2. Sign up for an account
-3. Generate your API key from the dashboard
-
-## Support
-
-- **Documentation**: [https://docs.cacheai.tech](https://docs.cacheai.tech)
-- **Issues**: [GitHub Issues](https://github.com/cacheaitechnologies/cacheai/issues)
-- **Email**: info@cacheaitechnologies.com
+Please contact us at **info@cacheaitechnologies.com** for any questions.
 
 ## Contributing
 
@@ -71,10 +62,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Links
 
-- [Homepage](https://www.cacheaitechnologies.com)
-- [Documentation](https://docs.cacheai.tech)
+- [Website](https://www.cacheaitechnologies.com)
 - [Python Package (PyPI)](https://pypi.org/project/cacheai/)
 
 ---
 
-© 2025 CacheAI Technologies, Inc.
+© 2026 CacheAI Technologies, Inc.
