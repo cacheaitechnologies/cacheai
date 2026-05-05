@@ -36,14 +36,14 @@ def call_baseline_model(
         ValidationError: If provider is unsupported or config is invalid
         APIError: If API call fails
     """
-    # Set default base URL based on provider
+    # Validate baseline_model_base_url is required
     if not baseline_model_base_url:
-        if baseline_model_provider == "openai":
-            baseline_model_base_url = "https://api.openai.com/v1"
-        else:
-            raise ValidationError(f"Unsupported baseline model provider: {baseline_model_provider}")
+        raise ValidationError(
+            "baseline_model_base_url is required for Baseline model calls. "
+            "Set baseline_model_base_url in Client or CACHEAI_BASELINE_MODEL_BASE_URL env var."
+        )
         
-    logger.info(f"Calling Baseline model: provider={baseline_model_provider}, model={model}")
+    logger.info(f"Calling Baseline model: provider={baseline_model_provider}, base_url={baseline_model_base_url}, model={model}")
     
     # Call Baseline model API (OpenAI-compatible)
     url = f"{baseline_model_base_url.rstrip('/')}/chat/completions"
