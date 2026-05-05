@@ -125,6 +125,10 @@ class Completions:
         baseline_model_api_key = self._client.baseline_model_api_key
         baseline_model_base_url = self._client.baseline_model_base_url
         
+        # Use client.baseline_model if set, otherwise use the model parameter
+        actual_model = self._client.baseline_model or model
+        logger.info(f"Baseline model selection: client.baseline_model={self._client.baseline_model}, model param={model}, actual_model={actual_model}")
+        
         # Validate baseline configuration
         if not baseline_model_provider:
             raise ValidationError(
@@ -140,7 +144,7 @@ class Completions:
         
         # Call Baseline model
         return call_baseline_model(
-            model=model,
+            model=actual_model,
             messages=messages,
             baseline_model_provider=baseline_model_provider,
             baseline_model_api_key=baseline_model_api_key,

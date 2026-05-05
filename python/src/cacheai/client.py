@@ -52,6 +52,7 @@ class Client:
         max_retries: int = 2,
         enable_cache: bool = True,
         baseline_model_provider: Optional[str] = None,
+        baseline_model: Optional[str] = None,
         baseline_model_api_key: Optional[str] = None,
         baseline_model_base_url: Optional[str] = None,
     ) -> None:
@@ -65,6 +66,7 @@ class Client:
             max_retries: Maximum number of retries for failed requests
             enable_cache: Enable CacheAI semantic caching (default: True)
             baseline_model_provider: Baseline LLM provider (openai, anthropic, google, etc.)
+            baseline_model: Baseline LLM model name (e.g., google/gemma-3-27b-it, gpt-3.5-turbo)
             baseline_model_api_key: Baseline LLM API key
             baseline_model_base_url: Custom baseline LLM endpoint URL
         """
@@ -88,12 +90,13 @@ class Client:
 
         # Baseline model configuration
         self.baseline_model_provider = baseline_model_provider or os.getenv("CACHEAI_BASELINE_MODEL_PROVIDER")
+        self.baseline_model = baseline_model or os.getenv("CACHEAI_BASELINE_MODEL")
         self.baseline_model_api_key = baseline_model_api_key or os.getenv("CACHEAI_BASELINE_MODEL_API_KEY")
         self.baseline_model_base_url = baseline_model_base_url or os.getenv("CACHEAI_BASELINE_MODEL_BASE_URL")
 
         logger.info(f"Initializing Cache AI client: base_url={self.base_url}, enable_cache={self.enable_cache}")
-        if self.baseline_model_provider:
-            logger.debug(f"Baseline model configured: provider={self.baseline_model_provider}, base_url={self.baseline_model_base_url or 'default'}")
+        if self.baseline_model_provider or self.baseline_model:
+            logger.debug(f"Baseline model configured: provider={self.baseline_model_provider}, model={self.baseline_model}, base_url={self.baseline_model_base_url or 'default'}")
 
         # Setup session with retry strategy
         self._session = requests.Session()
@@ -125,6 +128,8 @@ class Client:
         # Add baseline configuration headers
         if self.baseline_model_provider:
             headers["X-CacheAI-Baseline-Model-Provider"] = self.baseline_model_provider
+        if self.baseline_model:
+            headers["X-CacheAI-Baseline-Model"] = self.baseline_model
         if self.baseline_model_api_key:
             headers["X-CacheAI-Baseline-Model-API-Key"] = self.baseline_model_api_key
         if self.baseline_model_base_url:

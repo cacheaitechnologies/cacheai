@@ -10,13 +10,17 @@ def main():
     # You can set API keys via environment variables:
     # export CACHEAI_API_KEY="your-cacheai-api-key"
     # export CACHEAI_BASELINE_MODEL_PROVIDER="openai"
+    # export CACHEAI_BASELINE_MODEL="google/gemma-3-27b-it"
     # export CACHEAI_BASELINE_MODEL_API_KEY="your-baseline-model-api-key"
+    # export CACHEAI_BASELINE_MODEL_BASE_URL="http://localhost:8011/v1"
     
     try:
         client = Client(
             api_key=os.getenv("CACHEAI_API_KEY", "your-cacheai-api-key"),
             baseline_model_provider=os.getenv("CACHEAI_BASELINE_MODEL_PROVIDER", "openai"),
+            baseline_model=os.getenv("CACHEAI_BASELINE_MODEL"),
             baseline_model_api_key=os.getenv("CACHEAI_BASELINE_MODEL_API_KEY", "your-baseline-model-api-key"),
+            baseline_model_base_url=os.getenv("CACHEAI_BASELINE_MODEL_BASE_URL"),
         )
         
         print("=" * 60)
