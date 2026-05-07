@@ -94,8 +94,36 @@ class Completions:
             # Check if Baseline model is required (no cache hit)
             if response_data.get("requires_baseline_model"):
                 logger.info("No cache hit, calling Baseline model")
+                cache_key = response_data.get("cache_key")
+                
+                if not cache_key:
+                    raise CacheAIError("No cache_key in response from WebAPI /chat/completions")
+                
+                logger.info(f"Cache key from WebAPI: {cache_key}")
+                
                 # Call Baseline model
                 response_data = self._call_baseline_model(model, messages, payload)
+                logger.info("Baseline model called successfully")
+                
+                # Update cache with baseline model response
+                try:
+                    logger.info(f"Updating cache with baseline model response: cache_key={cache_key}")
+                    output_text = response_data["choices"][0]["message"]["content"]
+                    
+                    # Format messages as prompt string
+                    prompt_str = self._format_messages_to_prompt(messages)
+                    
+                    # Update cache using cache.update()
+                    update_result = self._client.cache.update(
+                        cache_key,
+                        output=output_text,
+                        model_id=model,
+                        prompt=prompt_str
+                    )
+                    logger.info(f"Cache updated successfully")
+                except Exception as e:
+                    logger.error(f"Failed to update cache: {e}")
+                    # Continue even if cache update fails
             else:
                 logger.info(f"Cache hit or direct response (requires_baseline_model={response_data.get('requires_baseline_model')})")
             
@@ -143,7 +171,7 @@ class Completions:
             )
         
         # Call Baseline model
-        return call_baseline_model(
+        response_data = call_baseline_model(
             model=actual_model,
             messages=messages,
             baseline_model_provider=baseline_model_provider,
@@ -154,6 +182,26 @@ class Completions:
                if k in ["temperature", "max_tokens", "top_p", 
                        "frequency_penalty", "presence_penalty", "stop"]}
         )
+        
+        return response_data
+
+    def _format_messages_to_prompt(self, messages: List[Dict[str, str]]) -> str:
+        """
+        Convert messages list to a single prompt string.
+        
+        Args:
+            messages: List of message dictionaries with 'role' and 'content'
+            
+        Returns:
+            Formatted prompt string
+        """
+        prompt_parts = []
+        for msg in messages:
+            role = msg.get("role", "")
+            content = msg.get("content", "")
+            if role and content:
+                prompt_parts.append(f"{role}: {content}")
+        return "\n".join(prompt_parts)
 
     def _stream(self, payload: Dict[str, Any]) -> Iterator[ChatCompletionChunk]:
         """Stream chat completion chunks."""
