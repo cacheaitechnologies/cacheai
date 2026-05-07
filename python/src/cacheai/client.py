@@ -8,6 +8,7 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 from cacheai.resources import Chat
+from cacheai.resources.cache import Cache
 from cacheai.exceptions import (
     CacheAIError,
     AuthenticationError,
@@ -112,6 +113,7 @@ class Client:
 
         # Initialize resources
         self.chat = Chat(self)
+        self.cache = Cache(self)
 
     def _get_headers(self, extra_headers: Optional[Dict[str, str]] = None) -> Dict[str, str]:
         """Build request headers."""
@@ -271,6 +273,37 @@ class Client:
         except requests.exceptions.ConnectionError as e:
             raise ConnectionError(f"Connection failed: {e}")
         except requests.exceptions.RequestException as e:
+            raise CacheAIError(f"Request failed: {e}")
+
+    def _update(self, path: str, **kwargs: Any) -> Dict[str, Any]:
+        """Make an update request for cache operations."""
+        url = f"{self.base_url}{path}"
+        headers = self._get_headers(kwargs.pop("headers", None))
+
+        logger.debug(f"Making update request: url={url}")
+
+        try:
+            response = self._session.put(
+                url,
+                headers=headers,
+                timeout=self.timeout,
+                **kwargs,
+            )
+
+            if not response.ok:
+                self._handle_error_response(response)
+
+            logger.debug(f"Update request successful: status={response.status_code}")
+            return response.json()
+
+        except requests.exceptions.Timeout as e:
+            logger.error(f"Request timeout: url={url}, error={e}")
+            raise TimeoutError(f"Request timed out: {e}")
+        except requests.exceptions.ConnectionError as e:
+            logger.error(f"Connection error: url={url}, error={e}")
+            raise ConnectionError(f"Connection failed: {e}")
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Request failed: url={url}, error={e}")
             raise CacheAIError(f"Request failed: {e}")
 
     def close(self) -> None:
